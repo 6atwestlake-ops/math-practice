@@ -24,6 +24,7 @@
 
   if (global.ColeMathSet1) register(global.ColeMathSet1);
   if (global.ColeMathTaya6) register(global.ColeMathTaya6);
+  if (global.ColeMathGuest) register(global.ColeMathGuest);
 
   global.ColeMathQuestions = {
     register: register,
