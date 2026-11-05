@@ -1,5 +1,5 @@
 /* Math Practice — offline service worker (cache-first) */
-var CACHE = 'cole-math-v5';
+var CACHE = 'cole-math-v6';
 var ASSETS = [
   './',
   './index.html',
@@ -12,10 +12,12 @@ var ASSETS = [
   './js/app.js',
   './js/progress.js',
   './js/dashboard.js',
+  './js/draw.js',
   './js/game.js',
   './js/questions/index.js',
   './js/questions/set1.js',
   './js/questions/taya.js',
+  './js/questions/guest.js',
   './icons/icon-180.png',
   './icons/icon-192.png',
   './icons/icon-512.png',

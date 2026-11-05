@@ -46,7 +46,8 @@ main { flex: 1; padding: 16px; padding-bottom: max(16px, env(safe-area-inset-bot
   border-radius: 999px; margin-bottom: 8px;
 }
 
-.answer-row { display: flex; gap: 8px; margin-top: 8px; }
+.answer-area { margin-top: 8px; }
+.answer-row { display: flex; gap: 8px; }
 .answer-row input {
   flex: 1; font-size: 28px; padding: 14px 12px; border-radius: 12px;
   border: 2px solid #2a6fad; background: #0f2744; color: #fff;
@@ -56,11 +57,25 @@ main { flex: 1; padding: 16px; padding-bottom: max(16px, env(safe-area-inset-bot
 .answer-row button#minusBtn {
   padding: 0 16px; font-size: 26px; font-weight: 700;
   border: 2px solid #2a6fad; border-radius: 12px; background: #0f2744; color: #fff;
+  min-height: 52px;
 }
-.answer-row button#submitBtn {
-  padding: 0 22px; font-size: 18px; font-weight: 700;
+#submitBtn {
+  display: block; width: 100%; margin-top: 10px;
+  min-height: 48px; padding: 14px 22px; font-size: 20px; font-weight: 700;
   border: 0; border-radius: 12px; background: #7CFF9A; color: #0f2744;
 }
+#clearMarksBtn { margin-top: 10px; min-height: 44px; }
+#drawCanvas {
+  position: fixed; left: 0; top: 0; width: 100%; height: 100%;
+  z-index: 40; pointer-events: none; touch-action: none;
+}
+#drawCanvas.active { pointer-events: auto; }
+.field-label { display: block; margin-top: 12px; font-size: 14px; opacity: 0.9; }
+.select-field {
+  width: 100%; margin-top: 6px; padding: 12px; font-size: 18px;
+  border-radius: 12px; border: 2px solid #2a6fad; background: #0f2744; color: #fff;
+}
+#gameScorePanel .btn { max-width: 420px; margin-left: auto; margin-right: auto; }
 
 .feedback {
   text-align: center; font-size: 22px; font-weight: 700;

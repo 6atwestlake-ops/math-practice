@@ -41,6 +41,16 @@
           <button class="btn" id="pinSubmit" type="button">Continue</button>
           <button class="btn secondary" id="pinCancel" type="button">Cancel</button>
         </div>
+        <div id="guestSetup" style="display:none;margin-top:16px">
+          <h3 style="margin-top:0">Guest practice</h3>
+          <p class="hint">Pick a number set (1–N) and a target number to focus on.</p>
+          <label class="field-label" for="guestNumberSet">Number set (1 to …)</label>
+          <select id="guestNumberSet" class="select-field" aria-label="Number set"></select>
+          <label class="field-label" for="guestTarget">Target number</label>
+          <select id="guestTarget" class="select-field" aria-label="Target number"></select>
+          <button class="btn" id="guestStartBtn" type="button">Start practising</button>
+          <button class="btn secondary" id="guestCancelBtn" type="button">Cancel</button>
+        </div>
       </div>
     </section>
 
@@ -61,16 +71,19 @@
         <div class="progress-bar"><span id="barFill"></span></div>
         <div class="stats-row">
           <span id="qCount">1 / 50</span>
-          <span>Type your answer</span>
+          <span>Type or draw</span>
         </div>
         <div class="prompt" id="prompt">8 × 7</div>
-        <div class="answer-row">
-          <button id="minusBtn" type="button" aria-label="Minus sign" title="Minus">−</button>
-          <input id="answerInput" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
+        <div class="answer-area">
+          <div class="answer-row">
+            <button id="minusBtn" type="button" aria-label="Minus sign" title="Minus">−</button>
+            <input id="answerInput" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
+          </div>
           <button id="submitBtn" type="button">Go</button>
         </div>
         <div class="feedback" id="feedback"></div>
-        <p class="hint">For long division with a remainder, you can type e.g. <code>12 r 3</code>. Fractions: <code>3/4</code>.</p>
+        <button class="btn secondary" id="clearMarksBtn" type="button">Clear marks</button>
+        <p class="hint">For long division with a remainder, you can type e.g. <code>12 r 3</code>. Fractions: <code>3/4</code>. Draw with a finger if you like.</p>
       </div>
     </section>
 
@@ -90,12 +103,25 @@
     </section>
   </main>
 
+  <canvas id="drawCanvas" aria-hidden="true"></canvas>
+
   <div id="gameWrap">
-    <h2>Reward break!</h2>
-    <p style="margin:0 0 8px;opacity:0.85">Drag to dodge the red blobs — 30 seconds</p>
-    <canvas id="gameCanvas" width="360" height="480"></canvas>
-    <div id="gameHud">Get ready…</div>
-    <button class="btn secondary" id="gameSkipBtn" type="button" style="max-width:420px;margin-top:12px">Skip / back to math</button>
+    <div id="gamePlayPanel">
+      <h2>Reward break!</h2>
+      <p style="margin:0 0 8px;opacity:0.85">Drag to dodge the red blobs — 30 seconds</p>
+      <canvas id="gameCanvas" width="360" height="480"></canvas>
+      <div id="gameHud">Get ready…</div>
+      <button class="btn secondary" id="gameSkipBtn" type="button" style="max-width:420px;margin-top:12px">Skip</button>
+    </div>
+    <div id="gameScorePanel" style="display:none;max-width:420px;width:100%;text-align:center">
+      <h2 style="margin-top:0">Round over</h2>
+      <div class="summary-grid" style="margin-bottom:12px">
+        <div class="stat" style="grid-column:1 / -1"><div class="n" id="gameScoreValue">0</div><div class="l">Score</div></div>
+      </div>
+      <p id="gameScoreMsg" style="opacity:0.9">Nice work! Want to try again?</p>
+      <button class="btn" id="gameRetryBtn" type="button">Try again</button>
+      <button class="btn secondary" id="gameBackBtn" type="button">Back to math</button>
+    </div>
   </div>
 
   <script src="js/config.js"></script>
@@ -104,9 +130,11 @@
   <script src="js/sync.js"></script>
   <script src="js/questions/set1.js"></script>
   <script src="js/questions/taya.js"></script>
+  <script src="js/questions/guest.js"></script>
   <script src="js/questions/index.js"></script>
   <script src="js/progress.js"></script>
   <script src="js/dashboard.js"></script>
+  <script src="js/draw.js"></script>
   <script src="js/game.js"></script>
   <script src="js/app.js"></script>
 </body>
