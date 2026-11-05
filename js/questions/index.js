@@ -13,7 +13,8 @@
   }
 
   function current() {
-    // Default to Set 1; later: pick from settings / unlocked sets
+    var p = global.ColeMathProfiles && ColeMathProfiles.getActive();
+    if (p && p.setId && modules[p.setId]) return modules[p.setId];
     return modules['set1'] || null;
   }
 
@@ -21,8 +22,8 @@
     return Object.keys(modules).map(function (k) { return modules[k]; });
   }
 
-  // Auto-register Set 1 if already loaded
   if (global.ColeMathSet1) register(global.ColeMathSet1);
+  if (global.ColeMathTaya6) register(global.ColeMathTaya6);
 
   global.ColeMathQuestions = {
     register: register,
