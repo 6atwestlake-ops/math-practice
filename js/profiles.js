@@ -27,6 +27,14 @@
       setId: null,
       sessionSize: 0,
       blurb: 'Progress for Cole & Taya'
+    },
+    guest: {
+      id: 'guest',
+      name: 'Guest',
+      role: 'student',
+      setId: 'guest',
+      sessionSize: 20,
+      blurb: 'Quick practice · no PIN'
     }
   };
 
@@ -100,7 +108,7 @@
   }
 
   function list() {
-    return [PROFILES.cole, PROFILES.taya, PROFILES.dad];
+    return [PROFILES.cole, PROFILES.taya, PROFILES.dad, PROFILES.guest];
   }
 
   function get(id) {

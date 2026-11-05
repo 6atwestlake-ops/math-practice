@@ -1,13 +1,16 @@
-/* ~30s tap/dodge mini-game reward — canvas, no external assets */
+/* ~30s tap/dodge mini-game — ends on a score screen (Try again / Back to math) */
 (function (global) {
   'use strict';
 
   var wrap, canvas, ctx, hud, running, raf, startTs, score, player, threats, W, H;
+  var playPanel, scorePanel;
 
   function ensureDom() {
     wrap = document.getElementById('gameWrap');
     canvas = document.getElementById('gameCanvas');
     hud = document.getElementById('gameHud');
+    playPanel = document.getElementById('gamePlayPanel');
+    scorePanel = document.getElementById('gameScorePanel');
     if (!wrap || !canvas) return false;
     ctx = canvas.getContext('2d');
     return true;
@@ -42,12 +45,10 @@
   function draw() {
     ctx.fillStyle = '#10243c';
     ctx.fillRect(0, 0, W, H);
-    // player
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
     ctx.fillStyle = '#7CFF9A';
     ctx.fill();
-    // threats
     var i;
     for (i = 0; i < threats.length; i++) {
       var t = threats[i];
@@ -83,7 +84,7 @@
     draw();
     hud.textContent = 'Dodge the reds · ' + left.toFixed(0) + 's left · score ' + score;
     if (left <= 0) {
-      stop();
+      endRound();
       return;
     }
     raf = requestAnimationFrame(tick);
@@ -105,42 +106,75 @@
     player.y = Math.max(player.r, Math.min(H - player.r, cy - rect.top));
   }
 
-  function start(onDone) {
-    if (!ensureDom()) { if (onDone) onDone(0); return; }
+  function showPlay() {
+    if (playPanel) playPanel.style.display = 'block';
+    if (scorePanel) scorePanel.style.display = 'none';
+  }
+
+  function showScore() {
+    if (playPanel) playPanel.style.display = 'none';
+    if (scorePanel) scorePanel.style.display = 'block';
+    var val = document.getElementById('gameScoreValue');
+    var msg = document.getElementById('gameScoreMsg');
+    if (val) val.textContent = String(score);
+    if (msg) {
+      if (score >= 20) msg.textContent = 'Awesome score! Want to try again?';
+      else if (score >= 8) msg.textContent = 'Nice work! Want to try again?';
+      else msg.textContent = 'Good try! Want another round?';
+    }
+  }
+
+  function startRound() {
     resize();
     reset();
     running = true;
-    wrap.className = 'active';
+    showPlay();
     canvas.ontouchstart = onPointer;
     canvas.ontouchmove = onPointer;
     canvas.onmousedown = onPointer;
     canvas.onmousemove = function (e) { if (e.buttons) onPointer(e); };
-    wrap._onDone = onDone;
     raf = requestAnimationFrame(tick);
   }
 
-  function stop() {
+  function start(onDone) {
+    if (!ensureDom()) { if (onDone) onDone(0); return; }
+    wrap.className = 'active';
+    wrap._onDone = onDone;
+    startRound();
+  }
+
+  function endRound() {
+    running = false;
+    if (raf) cancelAnimationFrame(raf);
+    showScore();
+  }
+
+  function finishToMath() {
     running = false;
     if (raf) cancelAnimationFrame(raf);
     wrap.className = '';
+    showPlay();
     var done = wrap._onDone;
     wrap._onDone = null;
     if (done) done(score);
   }
 
-  // Early exit button
-  function bindSkip() {
-    var btn = document.getElementById('gameSkipBtn');
-    if (btn) btn.onclick = function () { stop(); };
+  function bindUi() {
+    var skip = document.getElementById('gameSkipBtn');
+    var retry = document.getElementById('gameRetryBtn');
+    var back = document.getElementById('gameBackBtn');
+    if (skip) skip.onclick = function () { endRound(); };
+    if (retry) retry.onclick = function () { startRound(); };
+    if (back) back.onclick = function () { finishToMath(); };
   }
 
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', bindSkip);
+      document.addEventListener('DOMContentLoaded', bindUi);
     } else {
-      bindSkip();
+      bindUi();
     }
   }
 
-  global.ColeMathGame = { start: start, stop: stop };
+  global.ColeMathGame = { start: start, stop: finishToMath };
 })(typeof window !== 'undefined' ? window : global);

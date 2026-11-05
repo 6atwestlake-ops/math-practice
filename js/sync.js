@@ -25,6 +25,7 @@
       pid = p && p.role === 'student' ? p.id : null;
     }
     if (!pid) return Promise.resolve({ skipped: true, reason: 'no-profile' });
+    if (pid === 'guest') return Promise.resolve({ skipped: true, reason: 'guest' });
     if (!ColeMathStorage.isDirty(pid)) {
       return Promise.resolve({ skipped: true, reason: 'clean' });
     }
