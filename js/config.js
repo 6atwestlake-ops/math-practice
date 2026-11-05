@@ -4,7 +4,6 @@
   'use strict';
   global.ColeMathConfig = {
     endpointUrl: '',
-    syncKey: 'lHxI29Apw6-kqF94JZiLEUYdZtTwshm8lkGyN2qzybY',
-    nickname: 'Cole'
+    syncKey: 'p3MRJeaTU4Uz2orW_sNN2ivZFHBHN0mVTh6jatFUZAw'
   };
 })(typeof window !== 'undefined' ? window : global);
