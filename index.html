@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Cole Math">
+  <meta name="apple-mobile-web-app-title" content="Math Practice">
   <meta name="theme-color" content="#1a5f9e">
-  <meta name="description" content="Offline daily math practice for Cole">
+  <meta name="description" content="Offline daily math practice for Cole and Taya">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
-  <title>Cole Math Practice</title>
+  <title>Math Practice</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="appbar">
-    <h1>Cole Math</h1>
-    <div class="meta" id="streakHud">Streak 0</div>
+    <h1 id="appTitle">Math Practice</h1>
+    <div class="meta" id="streakHud"></div>
   </header>
   <nav class="tabs">
     <button type="button" id="tab-home" class="active">Home</button>
@@ -27,17 +27,31 @@
   </nav>
 
   <main>
-    <section id="screen-home" class="screen active">
+    <section id="screen-profiles" class="screen active">
       <div class="install-tip">
-        On iPhone: open this page in Safari → Share → <strong>Add to Home Screen</strong>.
-        After that it works offline (no data needed on the drive).
+        On iPhone: Safari → Share → <strong>Add to Home Screen</strong>. Works offline after that.
       </div>
       <div class="card">
-        <h2 style="margin-top:0">Today’s set</h2>
-        <p>About 50 questions in the same mix as Set 1 worksheets: times tables, division, integers, BEDMAS, and geometry.</p>
+        <h2 style="margin-top:0">Who’s practising?</h2>
+        <div id="profileList"></div>
+        <div id="pinPanel" style="display:none;margin-top:16px">
+          <h3 id="pinTitle">PIN</h3>
+          <input id="pinInput" type="tel" inputmode="numeric" maxlength="4" pattern="[0-9]*" autocomplete="off" placeholder="••••" class="pin-input" aria-label="4-digit PIN">
+          <p class="hint" id="pinHint"></p>
+          <button class="btn" id="pinSubmit" type="button">Continue</button>
+          <button class="btn secondary" id="pinCancel" type="button">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-home" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0" id="homeTitle">Today’s set</h2>
+        <p id="homeBlurb">Daily math practice.</p>
         <p>Get <strong>5 correct in a row</strong> to unlock a short mini-game break.</p>
         <button class="btn" id="startBtn" type="button">Start today’s set</button>
-        <p class="hint">Works fully offline. If sync is set up, a totals summary can reach a private sheet when online — no accounts on the phone.</p>
+        <button class="btn secondary" id="switchProfileBtn" type="button">Switch profile</button>
+        <p class="hint">Works fully offline. Progress stays on this phone per profile.</p>
       </div>
     </section>
 
@@ -56,12 +70,16 @@
           <button id="submitBtn" type="button">Go</button>
         </div>
         <div class="feedback" id="feedback"></div>
-        <p class="hint">For long division with a remainder, you can type e.g. <code>12 r 3</code>.</p>
+        <p class="hint">For long division with a remainder, you can type e.g. <code>12 r 3</code>. Fractions: <code>3/4</code>.</p>
       </div>
     </section>
 
     <section id="screen-progress" class="screen">
       <div id="progressRoot"></div>
+    </section>
+
+    <section id="screen-dashboard" class="screen">
+      <div id="dashboardRoot"></div>
     </section>
 
     <section id="screen-summary" class="screen">
@@ -81,11 +99,14 @@
   </div>
 
   <script src="js/config.js"></script>
+  <script src="js/profiles.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/sync.js"></script>
   <script src="js/questions/set1.js"></script>
+  <script src="js/questions/taya.js"></script>
   <script src="js/questions/index.js"></script>
   <script src="js/progress.js"></script>
+  <script src="js/dashboard.js"></script>
   <script src="js/game.js"></script>
   <script src="js/app.js"></script>
 </body>

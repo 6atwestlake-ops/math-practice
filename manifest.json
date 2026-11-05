@@ -1,7 +1,7 @@
 {
-  "name": "Cole Math Practice",
-  "short_name": "Cole Math",
-  "description": "Offline daily math practice for Cole — Set 1",
+  "name": "Math Practice",
+  "short_name": "Math",
+  "description": "Offline daily math practice for Cole and Taya",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

@@ -1,21 +1,25 @@
-/* Cole Math Practice — offline service worker (cache-first) */
-var CACHE = 'cole-math-v3';
+/* Math Practice — offline service worker (cache-first) */
+var CACHE = 'cole-math-v4';
 var ASSETS = [
   './',
   './index.html',
   './manifest.json',
   './css/style.css',
   './js/config.js',
-  './js/app.js',
+  './js/profiles.js',
   './js/storage.js',
   './js/sync.js',
+  './js/app.js',
   './js/progress.js',
+  './js/dashboard.js',
   './js/game.js',
   './js/questions/index.js',
   './js/questions/set1.js',
+  './js/questions/taya.js',
   './icons/icon-180.png',
   './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-512.png',
+  './icons/icon.svg'
 ];
 
 self.addEventListener('install', function (event) {
@@ -47,7 +51,6 @@ self.addEventListener('fetch', function (event) {
     caches.match(req).then(function (cached) {
       if (cached) return cached;
       return fetch(req).then(function (res) {
-        // Opportunistically cache same-origin GETs
         try {
           var url = new URL(req.url);
           if (url.origin === self.location.origin && res && res.ok) {
@@ -56,10 +59,9 @@ self.addEventListener('fetch', function (event) {
               cache.put(req, copy);
             });
           }
-        } catch (e) { /* ignore */ }
+        } catch (e) {}
         return res;
       }).catch(function () {
-        // Offline fallback to index for navigations
         if (req.mode === 'navigate') {
           return caches.match('./index.html');
         }

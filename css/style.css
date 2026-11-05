@@ -121,3 +121,15 @@ main { flex: 1; padding: 16px; padding-bottom: max(16px, env(safe-area-inset-bot
 .install-tip {
   background: #1a5f9e; border-radius: 12px; padding: 12px; font-size: 13px; margin-bottom: 12px;
 }
+
+.profile-btn {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px;
+  text-align: left; margin-top: 10px;
+}
+.profile-btn .hint { font-weight: 400; opacity: 0.85; }
+.pin-input {
+  width: 100%; font-size: 28px; letter-spacing: 0.4em; text-align: center;
+  padding: 14px; border-radius: 12px; border: 2px solid #2a6fad;
+  background: #0f2744; color: #fff; margin: 8px 0;
+}
+a.sheet-link { color: #7CFF9A; font-weight: 700; }
