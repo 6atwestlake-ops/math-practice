@@ -43,11 +43,30 @@
         </div>
         <div id="guestSetup" style="display:none;margin-top:16px">
           <h3 style="margin-top:0">Guest practice</h3>
-          <p class="hint">Pick a number set (1–N) and a target number to focus on.</p>
-          <label class="field-label" for="guestNumberSet">Number set (1 to …)</label>
-          <select id="guestNumberSet" class="select-field" aria-label="Number set"></select>
-          <label class="field-label" for="guestTarget">Target number</label>
-          <select id="guestTarget" class="select-field" aria-label="Target number"></select>
+          <p class="hint">Pick a level from 1 to 20. Higher levels use bigger numbers.</p>
+          <label class="field-label" for="guestLevel">Level</label>
+          <select id="guestLevel" class="select-field" aria-label="Level 1 to 20">
+            <option value="1">Level 1</option>
+            <option value="2">Level 2</option>
+            <option value="3">Level 3</option>
+            <option value="4">Level 4</option>
+            <option value="5">Level 5</option>
+            <option value="6">Level 6</option>
+            <option value="7">Level 7</option>
+            <option value="8">Level 8</option>
+            <option value="9">Level 9</option>
+            <option value="10">Level 10</option>
+            <option value="11">Level 11</option>
+            <option value="12">Level 12</option>
+            <option value="13">Level 13</option>
+            <option value="14">Level 14</option>
+            <option value="15">Level 15</option>
+            <option value="16">Level 16</option>
+            <option value="17">Level 17</option>
+            <option value="18">Level 18</option>
+            <option value="19">Level 19</option>
+            <option value="20">Level 20</option>
+          </select>
           <button class="btn" id="guestStartBtn" type="button">Start practising</button>
           <button class="btn secondary" id="guestCancelBtn" type="button">Cancel</button>
         </div>
@@ -66,7 +85,8 @@
     </section>
 
     <section id="screen-practice" class="screen">
-      <div class="card">
+      <div class="card practice-card">
+        <button type="button" id="clearMarksBtn" class="clear-marks-btn" aria-label="Clear marks">Clear</button>
         <span class="type-tag" id="typeTag">Multiplication</span>
         <div class="progress-bar"><span id="barFill"></span></div>
         <div class="stats-row">
@@ -77,12 +97,11 @@
         <div class="answer-area">
           <div class="answer-row">
             <button id="minusBtn" type="button" aria-label="Minus sign" title="Minus">−</button>
-            <input id="answerInput" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
+            <input id="answerInput" type="text" inputmode="decimal" size="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
           </div>
           <button id="submitBtn" type="button">Go</button>
         </div>
         <div class="feedback" id="feedback"></div>
-        <button class="btn secondary" id="clearMarksBtn" type="button">Clear marks</button>
         <p class="hint">For long division with a remainder, you can type e.g. <code>12 r 3</code>. Fractions: <code>3/4</code>. Draw with a finger if you like.</p>
       </div>
     </section>

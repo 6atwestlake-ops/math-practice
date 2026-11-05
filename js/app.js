@@ -97,6 +97,43 @@
   }
 
   var pendingProfileId = null;
+  var GUEST_LEVEL_KEY = 'coleMathGuestLevel';
+
+  function fillGuestLevels() {
+    var sel = $('guestLevel');
+    if (!sel) return;
+    if (!sel.options.length) {
+      var i, opt;
+      for (i = 1; i <= 20; i++) {
+        opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = 'Level ' + i;
+        sel.appendChild(opt);
+      }
+    }
+    var saved = '10';
+    try { saved = localStorage.getItem(GUEST_LEVEL_KEY) || '10'; } catch (e) {}
+    if (parseInt(saved, 10) >= 1 && parseInt(saved, 10) <= 20) sel.value = saved;
+  }
+
+  function beginGuest() {
+    pendingProfileId = 'guest';
+    if ($('pinPanel')) $('pinPanel').style.display = 'none';
+    fillGuestLevels();
+    if ($('guestSetup')) $('guestSetup').style.display = 'block';
+  }
+
+  function startGuestPractice() {
+    var sel = $('guestLevel');
+    var level = sel ? parseInt(sel.value, 10) : 10;
+    if (!(level >= 1 && level <= 20)) level = 10;
+    try { localStorage.setItem(GUEST_LEVEL_KEY, String(level)); } catch (e2) {}
+    if (window.ColeMathGuest && ColeMathGuest.setLevel) ColeMathGuest.setLevel(level);
+    if ($('guestSetup')) $('guestSetup').style.display = 'none';
+    enterProfile('guest');
+    startSession();
+  }
+
 
   function beginProfile(id) {
     if (id === 'guest') { beginGuest(); return; }
@@ -152,7 +189,7 @@
         if (p.id === 'taya') {
           $('homeBlurb').textContent = 'About 30 questions: times tables, division, decimals, fractions, and rectangle perimeter/area.';
         } else if (p.id === 'guest') {
-          $('homeBlurb').textContent = 'About 20 questions using your target number and number set.';
+          $('homeBlurb').textContent = 'About 20 questions using numbers from 1 up to the level you picked.';
         } else {
           $('homeBlurb').textContent = 'About 50 questions in the Set 1 mix: times tables, division, integers, BEDMAS, and geometry.';
         }
@@ -192,9 +229,6 @@
     $('feedback').className = 'feedback';
     if (window.ColeMathDraw) ColeMathDraw.clear();
     updateHud();
-    setTimeout(function () {
-      try { $('answerInput').focus(); } catch (e) {}
-    }, 50);
   }
 
   function startSession() {
@@ -373,27 +407,7 @@
     if (window.ColeMathTaya6 && window.ColeMathQuestions) ColeMathQuestions.register(ColeMathTaya6);
     if (window.ColeMathGuest && window.ColeMathQuestions) ColeMathQuestions.register(ColeMathGuest);
     bind();
-    var p = ColeMathProfiles.getActive();
-    if (!p) {
-      showProfilePicker();
-    } else {
-      updateChrome();
-      if (p.role === 'dashboard') showScreen('dashboard');
-      else {
-        if ($('homeBlurb')) {
-          if (p.id === 'taya') {
-            $('homeBlurb').textContent = 'About 30 questions: times tables, division, decimals, fractions, and rectangle perimeter/area.';
-          } else if (p.id === 'guest') {
-            $('homeBlurb').textContent = 'About 20 questions using your target number and number set.';
-          } else {
-            $('homeBlurb').textContent = 'About 50 questions in the Set 1 mix: times tables, division, integers, BEDMAS, and geometry.';
-          }
-        }
-        if ($('homeTitle')) $('homeTitle').textContent = p.name + ' — today’s set';
-        showScreen('home');
-        try { if (window.ColeMathSync) ColeMathSync.trySync(); } catch (e) {}
-      }
-    }
+    showProfilePicker();
     registerSW();
   }
 
@@ -410,6 +424,7 @@
     STREAK_REWARD: STREAK_REWARD,
     showProfilePicker: showProfilePicker,
     beginGuest: beginGuest,
+    startGuestPractice: startGuestPractice,
     enterProfile: enterProfile,
     beginProfile: beginProfile,
     submitPin: submitPin,

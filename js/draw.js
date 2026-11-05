@@ -1,4 +1,4 @@
-/* Practice-screen scribble overlay — thin red stroke; skips controls/keyboard */
+/* Practice-screen scribble overlay — thin red stroke; never steals taps */
 (function (global) {
   'use strict';
 
@@ -44,19 +44,20 @@
   function setEnabled(on) {
     enabled = !!on;
     if (!ensure()) return;
+    drawing = false;
+    /* Canvas must stay pointer-events: none so the answer field and
+       buttons receive taps (iPhone keyboard + Clear). */
+    canvas.style.pointerEvents = 'none';
     if (enabled) {
-      canvas.className = 'active';
       resize();
     } else {
-      drawing = false;
-      canvas.className = '';
       clear();
     }
   }
 
   function inKeyboardZone(clientY) {
     var vv = window.visualViewport;
-    if (vv && typeof vv.height === 'number') {
+    if (vv && typeof vv.height === 'number' && vv.height < window.innerHeight - 40) {
       var bottom = vv.offsetTop + vv.height;
       return clientY > bottom - 2;
     }
@@ -68,29 +69,21 @@
   }
 
   function isProtectedTarget(el) {
-    if (!el) return false;
     var node = el;
-    while (node && node !== document.body) {
-      if (node.id === 'submitBtn' || node.id === 'answerInput' || node.id === 'minusBtn' ||
-          node.id === 'clearMarksBtn' || node.id === 'gameWrap' ||
-          (node.className && String(node.className).indexOf('btn') >= 0 && node.tagName === 'BUTTON')) {
-        /* only protect specific practice controls, not all buttons on other screens */
+    while (node && node !== document && node !== document.body) {
+      var tag = node.tagName;
+      if (tag === 'INPUT' || tag === 'BUTTON' || tag === 'SELECT' ||
+          tag === 'TEXTAREA' || tag === 'A' || tag === 'LABEL') {
+        return true;
       }
-      if (node.id === 'submitBtn' || node.id === 'answerInput' || node.id === 'minusBtn' ||
-          node.id === 'clearMarksBtn') {
+      if (node.id === 'answerInput' || node.id === 'submitBtn' ||
+          node.id === 'minusBtn' || node.id === 'clearMarksBtn' ||
+          node.id === 'gameWrap') {
         return true;
       }
       node = node.parentNode;
     }
     return false;
-  }
-
-  function hitProtected(clientX, clientY) {
-    if (!canvas) return false;
-    canvas.style.pointerEvents = 'none';
-    var el = document.elementFromPoint(clientX, clientY);
-    canvas.style.pointerEvents = enabled ? 'auto' : 'none';
-    return isProtectedTarget(el);
   }
 
   function pointFromEvent(e) {
@@ -106,7 +99,7 @@
   function onStart(e) {
     if (!enabled) return;
     var p = pointFromEvent(e);
-    if (inKeyboardZone(p.y) || hitProtected(p.x, p.y)) {
+    if (isProtectedTarget(e.target) || inKeyboardZone(p.y)) {
       drawing = false;
       return;
     }
@@ -132,34 +125,27 @@
     if (e.cancelable) e.preventDefault();
   }
 
-  function onEnd(e) {
-    if (!drawing) return;
+  function onEnd() {
     drawing = false;
-    if (e && e.cancelable) e.preventDefault();
   }
 
   function bind() {
     if (!ensure()) return;
+    canvas.style.pointerEvents = 'none';
     resize();
-    canvas.addEventListener('touchstart', onStart, { passive: false });
-    canvas.addEventListener('touchmove', onMove, { passive: false });
-    canvas.addEventListener('touchend', onEnd, { passive: false });
-    canvas.addEventListener('touchcancel', onEnd, { passive: false });
-    canvas.addEventListener('mousedown', onStart);
-    canvas.addEventListener('mousemove', function (e) {
+    document.addEventListener('touchstart', onStart, { passive: false });
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('touchend', onEnd, { passive: true });
+    document.addEventListener('touchcancel', onEnd, { passive: true });
+    document.addEventListener('mousedown', onStart);
+    document.addEventListener('mousemove', function (e) {
       if (e.buttons) onMove(e);
     });
-    canvas.addEventListener('mouseup', onEnd);
-    canvas.addEventListener('mouseleave', onEnd);
+    document.addEventListener('mouseup', onEnd);
     window.addEventListener('resize', function () {
       if (enabled) { resize(); clear(); }
       else resize();
     });
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', function () {
-        if (enabled) { /* keep marks; just note keyboard */ }
-      });
-    }
   }
 
   if (typeof document !== 'undefined') {

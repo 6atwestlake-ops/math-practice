@@ -46,15 +46,21 @@ main { flex: 1; padding: 16px; padding-bottom: max(16px, env(safe-area-inset-bot
   border-radius: 999px; margin-bottom: 8px;
 }
 
-.answer-area { margin-top: 8px; }
-.answer-row { display: flex; gap: 8px; }
+.practice-card { position: relative; overflow: hidden; }
+.answer-area { margin-top: 8px; width: 100%; max-width: 100%; min-width: 0; }
+.answer-row { display: flex; gap: 8px; width: 100%; max-width: 100%; min-width: 0; }
 .answer-row input {
-  flex: 1; font-size: 28px; padding: 14px 12px; border-radius: 12px;
+  flex: 1 1 0%;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  font-size: 28px; padding: 14px 12px; border-radius: 12px;
   border: 2px solid #2a6fad; background: #0f2744; color: #fff;
   text-align: center; -webkit-appearance: none; appearance: none;
 }
 .answer-row input:focus { outline: none; border-color: #7CFF9A; }
 .answer-row button#minusBtn {
+  flex: 0 0 auto;
   padding: 0 16px; font-size: 26px; font-weight: 700;
   border: 2px solid #2a6fad; border-radius: 12px; background: #0f2744; color: #fff;
   min-height: 52px;
@@ -64,12 +70,17 @@ main { flex: 1; padding: 16px; padding-bottom: max(16px, env(safe-area-inset-bot
   min-height: 48px; padding: 14px 22px; font-size: 20px; font-weight: 700;
   border: 0; border-radius: 12px; background: #7CFF9A; color: #0f2744;
 }
-#clearMarksBtn { margin-top: 10px; min-height: 44px; }
+#clearMarksBtn, .clear-marks-btn {
+  position: absolute; top: 10px; right: 10px;
+  width: auto; margin: 0; min-height: 0;
+  padding: 4px 8px; font-size: 11px; font-weight: 700; line-height: 1.2;
+  border: 0; border-radius: 8px; background: #2a4a6e; color: #cfe3f7;
+  z-index: 2;
+}
 #drawCanvas {
   position: fixed; left: 0; top: 0; width: 100%; height: 100%;
   z-index: 40; pointer-events: none; touch-action: none;
 }
-#drawCanvas.active { pointer-events: auto; }
 .field-label { display: block; margin-top: 12px; font-size: 14px; opacity: 0.9; }
 .select-field {
   width: 100%; margin-top: 6px; padding: 12px; font-size: 18px;
