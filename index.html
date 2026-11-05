@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Cole Math">
+  <meta name="theme-color" content="#1a5f9e">
+  <meta name="description" content="Offline daily math practice for Cole">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <title>Cole Math Practice</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="appbar">
+    <h1>Cole Math</h1>
+    <div class="meta" id="streakHud">Streak 0</div>
+  </header>
+  <nav class="tabs">
+    <button type="button" id="tab-home" class="active">Home</button>
+    <button type="button" id="tab-practice">Practice</button>
+    <button type="button" id="tab-progress">Progress</button>
+  </nav>
+
+  <main>
+    <section id="screen-home" class="screen active">
+      <div class="install-tip">
+        On iPhone: open this page in Safari → Share → <strong>Add to Home Screen</strong>.
+        After that it works offline (no data needed on the drive).
+      </div>
+      <div class="card">
+        <h2 style="margin-top:0">Today’s set</h2>
+        <p>About 50 questions in the same mix as Set 1 worksheets: times tables, division, integers, BEDMAS, and geometry.</p>
+        <p>Get <strong>5 correct in a row</strong> to unlock a short mini-game break.</p>
+        <button class="btn" id="startBtn" type="button">Start today’s set</button>
+        <p class="hint">Works fully offline. If sync is set up, a totals summary can reach a private sheet when online — no accounts on the phone.</p>
+      </div>
+    </section>
+
+    <section id="screen-practice" class="screen">
+      <div class="card">
+        <span class="type-tag" id="typeTag">Multiplication</span>
+        <div class="progress-bar"><span id="barFill"></span></div>
+        <div class="stats-row">
+          <span id="qCount">1 / 50</span>
+          <span>Type your answer</span>
+        </div>
+        <div class="prompt" id="prompt">8 × 7</div>
+        <div class="answer-row">
+          <button id="minusBtn" type="button" aria-label="Minus sign" title="Minus">−</button>
+          <input id="answerInput" type="text" inputmode="decimal" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
+          <button id="submitBtn" type="button">Go</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+        <p class="hint">For long division with a remainder, you can type e.g. <code>12 r 3</code>.</p>
+      </div>
+    </section>
+
+    <section id="screen-progress" class="screen">
+      <div id="progressRoot"></div>
+    </section>
+
+    <section id="screen-summary" class="screen">
+      <div class="card">
+        <h2 style="margin-top:0">Set complete</h2>
+        <div id="summaryBody"></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="gameWrap">
+    <h2>Reward break!</h2>
+    <p style="margin:0 0 8px;opacity:0.85">Drag to dodge the red blobs — 30 seconds</p>
+    <canvas id="gameCanvas" width="360" height="480"></canvas>
+    <div id="gameHud">Get ready…</div>
+    <button class="btn secondary" id="gameSkipBtn" type="button" style="max-width:420px;margin-top:12px">Skip / back to math</button>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/sync.js"></script>
+  <script src="js/questions/set1.js"></script>
+  <script src="js/questions/index.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
