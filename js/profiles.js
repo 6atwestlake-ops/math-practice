@@ -33,7 +33,7 @@
       name: 'Guest',
       role: 'student',
       setId: 'guest',
-      sessionSize: 20,
+      sessionSize: 50,
       blurb: 'Quick practice · no PIN'
     }
   };

@@ -43,7 +43,7 @@
         </div>
         <div id="guestSetup" style="display:none;margin-top:16px">
           <h3 style="margin-top:0">Guest practice</h3>
-          <p class="hint">Pick a level from 1 to 20. Higher levels use bigger numbers.</p>
+          <p class="hint">Pick a level from 1 to 20. Levels follow a Grade 5 to Grade 9 path: facts → Grade 6/7 → Grade 8 → Grade 9.</p>
           <label class="field-label" for="guestLevel">Level</label>
           <select id="guestLevel" class="select-field" aria-label="Level 1 to 20">
             <option value="1">Level 1</option>
@@ -67,6 +67,7 @@
             <option value="19">Level 19</option>
             <option value="20">Level 20</option>
           </select>
+          <p class="hint" id="guestLevelDesc"></p>
           <button class="btn" id="guestStartBtn" type="button">Start practising</button>
           <button class="btn secondary" id="guestCancelBtn" type="button">Cancel</button>
         </div>

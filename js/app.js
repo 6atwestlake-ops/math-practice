@@ -114,6 +114,15 @@
     var saved = '10';
     try { saved = localStorage.getItem(GUEST_LEVEL_KEY) || '10'; } catch (e) {}
     if (parseInt(saved, 10) >= 1 && parseInt(saved, 10) <= 20) sel.value = saved;
+    sel.onchange = updateGuestLevelDesc;
+    updateGuestLevelDesc();
+  }
+
+  function updateGuestLevelDesc() {
+    var sel = $('guestLevel');
+    var el = $('guestLevelDesc');
+    if (!sel || !el) return;
+    if (window.ColeMathGuest && ColeMathGuest.describe) el.textContent = ColeMathGuest.describe(sel.value);
   }
 
   function beginGuest() {
