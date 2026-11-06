@@ -1,5 +1,5 @@
 /* Math Practice — offline service worker (cache-first) */
-var CACHE = 'cole-math-v8';
+var CACHE = 'cole-math-v9';
 var ASSETS = [
   './',
   './index.html',

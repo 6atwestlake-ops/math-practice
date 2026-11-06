@@ -8,9 +8,9 @@
       id: 'cole',
       name: 'Cole',
       role: 'student',
-      setId: 'set1',
+      setId: 'guest',
       sessionSize: 50,
-      blurb: 'Grade 9 · Set 1 practice'
+      blurb: 'Sets 1–20 · Grade 5 to 9 path'
     },
     taya: {
       id: 'taya',
@@ -34,7 +34,7 @@
       role: 'student',
       setId: 'guest',
       sessionSize: 50,
-      blurb: 'Quick practice · no PIN'
+      blurb: 'Levels 1–20 · no PIN'
     }
   };
 

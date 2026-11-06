@@ -79,6 +79,11 @@
         <h2 style="margin-top:0" id="homeTitle">Today’s set</h2>
         <p id="homeBlurb">Daily math practice.</p>
         <p>Get <strong>5 correct in a row</strong> to unlock a short mini-game break.</p>
+        <div id="homeLevelWrap" style="display:none">
+          <label class="field-label" for="homeLevel">Set</label>
+          <select id="homeLevel" class="select-field" aria-label="Set 1 to 20"></select>
+          <p class="hint" id="homeLevelDesc"></p>
+        </div>
         <button class="btn" id="startBtn" type="button">Start today’s set</button>
         <button class="btn secondary" id="switchProfileBtn" type="button">Switch profile</button>
         <p class="hint">Works fully offline. Progress stays on this phone per profile.</p>
@@ -98,11 +103,13 @@
         <div class="answer-area">
           <div class="answer-row">
             <button id="minusBtn" type="button" aria-label="Minus sign" title="Minus">−</button>
-            <input id="answerInput" type="text" inputmode="decimal" size="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
+            <button id="remBtn" type="button" aria-label="Remainder r" title="Remainder">r</button>
+            <input id="answerInput" type="text" inputmode="text" size="1" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Answer">
           </div>
           <button id="submitBtn" type="button">Go</button>
         </div>
         <div class="feedback" id="feedback"></div>
+        <button class="btn secondary skip-btn" id="skipBtn" type="button">Skip for now</button>
         <p class="hint">For long division with a remainder, you can type e.g. <code>12 r 3</code>. Fractions: <code>3/4</code>. Draw with a finger if you like.</p>
       </div>
     </section>
