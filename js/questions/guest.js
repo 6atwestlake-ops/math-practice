@@ -66,6 +66,14 @@
     return Q('fact', 'Division facts', (d * other) + ' ÷ ' + d, other, { tol: 0 });
   };
 
+  G.factCore = function () {
+    var a = rnd(6, 10), b = rnd(6, 10);
+    if (Math.random() < 0.5) return Q('fact', 'Times tables', a + ' × ' + b, a * b, { tol: 0 });
+    return Q('fact', 'Division facts', (a * b) + ' ÷ ' + a, b, { tol: 0 });
+  };
+
+  function solvePrompt(eq, v) { return 'Solve:\n' + eq + '\nSolve for ' + v + '.'; }
+
   /* Grade 5 */
   G.rectArea = function () {
     var l = rnd(2, 12), w = rnd(2, 10);
@@ -87,12 +95,12 @@
   };
   G.eq1 = function () {
     var x = rnd(2, 15), a = rnd(2, 12), f = pick([0, 1, 2, 3]), v = pick(['x', 'n', 'y', 'm']);
-    var p, h = 'Type the value of ' + v + '.';
+    var p;
     if (f === 0) p = v + ' + ' + a + ' = ' + (x + a);
     else if (f === 1) p = v + ' − ' + a + ' = ' + (x - a);
     else if (f === 2) p = a + v + ' = ' + (a * x);
     else p = v + ' ÷ ' + a + ' = ' + x, x = x * a;
-    return Q('eq1', 'One-step equation', 'Solve: ' + p, x, { hint: h, tol: 0 });
+    return Q('eq1', 'One-step equation', solvePrompt(p, v), x, { tol: 0 });
   };
   G.triArea = function () {
     var b = rnd(2, 10) * 2, h = rnd(2, 12);
@@ -126,8 +134,8 @@
   };
   G.eq2 = function () {
     var x = rnd(1, 12), a = rnd(2, 9), b = rnd(1, 20), v = pick(['x', 'n', 'y']);
-    if (Math.random() < 0.5) return Q('eq2', 'Two-step equation', 'Solve: ' + a + v + ' + ' + b + ' = ' + (a * x + b), x, { hint: 'Type the value of ' + v + '.', tol: 0 });
-    return Q('eq2', 'Two-step equation', 'Solve: ' + a + v + ' − ' + b + ' = ' + (a * x - b), x, { hint: 'Type the value of ' + v + '.', tol: 0 });
+    if (Math.random() < 0.5) return Q('eq2', 'Two-step equation', solvePrompt(a + v + ' + ' + b + ' = ' + (a * x + b), v), x, { tol: 0 });
+    return Q('eq2', 'Two-step equation', solvePrompt(a + v + ' − ' + b + ' = ' + (a * x - b), v), x, { tol: 0 });
   };
   G.circC = function () {
     var r = rnd(1, 12), useD = Math.random() < 0.5;
@@ -155,7 +163,7 @@
     else if (f === 1) { op = ' − '; ans = fracStr(n1 * d2 - n2 * d1, d1 * d2); }
     else if (f === 2) { op = ' × '; ans = fracStr(n1 * n2, d1 * d2); }
     else { op = ' ÷ '; ans = fracStr(n1 * d2, d1 * n2); }
-    return Q('fractions', 'Fraction operations', p + op + s, ans, { hint: 'Answer as a fraction in lowest terms, like 3/4.', tol: 0.0001 });
+    return Q('fractions', 'Fraction operations', p + op + s + '\nAnswer as a fraction, like 3/4.', ans, { tol: 0.0001 });
   };
   var TRIPLES = [[3, 4, 5], [5, 12, 13], [8, 15, 17], [7, 24, 25], [6, 8, 10], [9, 12, 15], [12, 16, 20], [9, 40, 41], [15, 20, 25]];
   G.pyth = function () {
@@ -178,7 +186,7 @@
   G.eq2int = function () {
     var x = nz(-10, 10), a = nz(-8, 8), b = nz(-12, 12);
     if (a === 1 || a === -1) a = a * 3;
-    return Q('eq2int', 'Two-step equation (integers)', 'Solve: ' + sgn(a) + 'x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ' = ' + sgn(a * x + b), x, { hint: 'Type the value of x.', tol: 0 });
+    return Q('eq2int', 'Two-step equation (integers)', solvePrompt(sgn(a) + 'x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ' = ' + sgn(a * x + b), 'x'), x, { tol: 0 });
   };
 
   /* Grade 9 */
@@ -224,15 +232,15 @@
     var x = nz(-10, 10), f = pick([0, 1, 2]), a, b, c, d;
     if (f === 0) { /* a(x + b) = c */
       a = nz(2, 6); b = nz(-8, 8);
-      return Q('multiEq', 'Multi-step equation', 'Solve: ' + a + '(x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ') = ' + sgn(a * (x + b)), x, { hint: 'Type the value of x.', tol: 0 });
+      return Q('multiEq', 'Multi-step equation', solvePrompt(a + '(x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ') = ' + sgn(a * (x + b)), 'x'), x, { tol: 0 });
     }
     if (f === 1) { /* ax + b = cx + d */
       a = rnd(3, 9); c = rnd(1, a - 1); b = nz(-12, 12); d = (a - c) * x + b;
-      return Q('multiEq', 'Multi-step equation', 'Solve: ' + a + 'x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ' = ' + (c === 1 ? '' : c) + 'x ' + (d < 0 ? '− ' + (-d) : '+ ' + d), x, { small: true, hint: 'Type the value of x.', tol: 0 });
+      return Q('multiEq', 'Multi-step equation', solvePrompt(a + 'x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ' = ' + (c === 1 ? '' : c) + 'x ' + (d < 0 ? '− ' + (-d) : '+ ' + d), 'x'), x, { small: true, tol: 0 });
     }
     /* a(x + b) + c = d */
     a = nz(2, 5); b = nz(-6, 6); c = nz(-10, 10); d = a * (x + b) + c;
-    return Q('multiEq', 'Multi-step equation', 'Solve: ' + a + '(x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ') ' + (c < 0 ? '− ' + (-c) : '+ ' + c) + ' = ' + sgn(d), x, { small: true, hint: 'Type the value of x.', tol: 0 });
+    return Q('multiEq', 'Multi-step equation', solvePrompt(a + '(x ' + (b < 0 ? '− ' + (-b) : '+ ' + b) + ') ' + (c < 0 ? '− ' + (-c) : '+ ' + c) + ' = ' + sgn(d), 'x'), x, { small: true, tol: 0 });
   };
 
   /* ---------- level plans ---------- */
@@ -243,7 +251,8 @@
   var REVIEW57 = G5.concat(G6, G7);
 
   var DESCRIPTIONS = {
-    1: 'Grade 5: 6–10 times tables & division, rectangle area',
+    1: 'Facts: 6×6 to 10×10 and matching division',
+    5: 'Grade 5: 6–10 facts plus rectangle area & perimeter',
     6: 'Grade 6: brackets, one-step equations, triangle & parallelogram area',
     8: 'Grade 7: integers, two-step equations, circles',
     10: 'Review of Grades 5–7',
@@ -269,7 +278,8 @@
     var g8upto = [], i;
     for (i = 11; i < L && i <= 15; i++) g8upto = g8upto.concat(G8[i]);
     var g8all = [].concat(G8[11], G8[12], G8[13], G8[14], G8[15]);
-    if (L <= 5) return { facts: 42 - 2 * L, parts: [[G5, 8 + 2 * L]] };
+    if (L <= 4) return { facts: 0, parts: [[['factCore'], 50]] };
+    if (L === 5) return { facts: 30, parts: [[G5, 20]] };
     if (L <= 7) return { facts: 10, parts: [[G6, 34], [G5, 6]] };
     if (L <= 9) return { facts: 10, parts: [[G7, 30], [G6, 10]] };
     if (L === 10) return { facts: 10, parts: [[G5, 6], [G6, 17], [G7, 17]] };
@@ -341,7 +351,7 @@
         if (q.type === 'fact') facts++;
         types[q.type] = (types[q.type] || 0) + 1;
       }
-      var factOk = L <= 5 ? facts > 12 : (facts >= 8 && facts <= 12);
+      var factOk = L <= 4 ? facts === 50 : L === 5 ? facts > 12 : (facts >= 8 && facts <= 12);
       var ok = s.length === 50 && bad.length === 0 && factOk;
       if (!ok) res.pass = false;
       res.levels[L] = { n: s.length, facts: facts, types: Object.keys(types).sort().join(','), bad: bad.slice(0, 3), pass: ok };

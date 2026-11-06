@@ -51,7 +51,7 @@
     return {
       type: 'div_long', label: 'Long division',
       prompt: n + ' ÷ ' + dv,
-      hint: r ? ' (remainder OK: e.g. ' + q + ' r ' + r + ')' : '',
+      hint: r ? 'Remainder OK, like 12 r 3.' : '',
       answer: r ? { kind: 'qr', q: q, r: r } : q,
       check: function (u) {
         var t = String(u).replace(/,/g, '').trim();

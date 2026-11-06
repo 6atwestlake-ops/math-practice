@@ -102,7 +102,7 @@
     var q = Math.floor(n / dv);
     var r = n % dv;
     var ans = r === 0 ? q : { kind: 'qr', q: q, r: r };
-    var hint = r === 0 ? '' : ' (remainder OK: e.g. ' + q + ' r ' + r + ')';
+    var hint = r === 0 ? '' : 'Remainder OK, like 12 r 3.';
     return {
       type: 'div_long',
       label: 'Long division',

@@ -132,6 +132,38 @@
     if ($('guestSetup')) $('guestSetup').style.display = 'block';
   }
 
+  var COLE_LEVEL_KEY = 'coleMathColeLevel';
+  function levelKeyFor(pid) { return pid === 'guest' ? GUEST_LEVEL_KEY : 'coleMath' + pid.charAt(0).toUpperCase() + pid.slice(1) + 'Level'; }
+  function savedLevel(pid) {
+    var v = NaN;
+    try { v = parseInt(localStorage.getItem(levelKeyFor(pid)), 10); } catch (e) {}
+    if (!(v >= 1 && v <= 20)) v = pid === 'guest' ? 10 : 1;
+    return v;
+  }
+  function fillHomeLevels(pid) {
+    var sel = $('homeLevel');
+    if (!sel) return;
+    if (!sel.options.length) {
+      var i, opt;
+      for (i = 1; i <= 20; i++) {
+        opt = document.createElement('option');
+        opt.value = String(i);
+        opt.textContent = 'Set ' + i;
+        sel.appendChild(opt);
+      }
+    }
+    sel.value = String(savedLevel(pid));
+    sel.onchange = function () {
+      try { localStorage.setItem(levelKeyFor(pid), sel.value); } catch (e) {}
+      updateHomeLevelDesc();
+    };
+    updateHomeLevelDesc();
+  }
+  function updateHomeLevelDesc() {
+    var sel = $('homeLevel'), el = $('homeLevelDesc');
+    if (sel && el && window.ColeMathGuest && ColeMathGuest.describe) el.textContent = ColeMathGuest.describe(sel.value);
+  }
+
   function startGuestPractice() {
     var sel = $('guestLevel');
     var level = sel ? parseInt(sel.value, 10) : 10;
@@ -198,10 +230,17 @@
         if (p.id === 'taya') {
           $('homeBlurb').textContent = 'About 30 questions: times tables, division, decimals, fractions, and rectangle perimeter/area.';
         } else if (p.id === 'guest') {
-          $('homeBlurb').textContent = 'About 20 questions using numbers from 1 up to the level you picked.';
+          $('homeBlurb').textContent = '50 questions at Level ' + savedLevel('guest') + ' on the Grade 5 to 9 path (' + (window.ColeMathGuest ? ColeMathGuest.describe(savedLevel('guest')) : '') + ').';
+        } else if (p.setId === 'guest') {
+          $('homeBlurb').textContent = '50 questions per set. Sets 1–4 are 6×6 to 10×10 facts and division, then Grade 5 to 9 work. Pick your set below.';
         } else {
           $('homeBlurb').textContent = 'About 50 questions in the Set 1 mix: times tables, division, integers, BEDMAS, and geometry.';
         }
+      }
+      if ($('homeLevelWrap')) {
+        var showLv = p.setId === 'guest' && p.id !== 'guest';
+        $('homeLevelWrap').style.display = showLv ? 'block' : 'none';
+        if (showLv) fillHomeLevels(p.id);
       }
       if ($('homeTitle')) $('homeTitle').textContent = p.name + ' — today’s set';
       showScreen('home');
@@ -225,19 +264,37 @@
     var q = currentQ();
     state.awaitingNext = false;
     state.firstTryOk = true;
+    state.wrongTries = 0;
     if (!q) {
       finishSession();
       return;
     }
     $('typeTag').textContent = q.label || q.type;
     var prompt = $('prompt');
-    prompt.textContent = q.prompt + (q.hint || '');
+    prompt.textContent = q.prompt + (q.hint ? '\n' + q.hint : '');
     prompt.className = 'prompt' + (q.promptClass ? ' ' + q.promptClass : '');
     $('answerInput').value = '';
     $('feedback').textContent = '';
     $('feedback').className = 'feedback';
     if (window.ColeMathDraw) ColeMathDraw.clear();
+    if ($('skipBtn')) $('skipBtn').disabled = (state.session.length - state.index) <= 1;
     updateHud();
+  }
+
+  function answerText(q) {
+    var a = q.answer;
+    if (typeof a === 'number') return String(a);
+    if (a && a.kind === 'qr') return a.q + ' r ' + a.r;
+    return String(a);
+  }
+
+  function skip() {
+    if (state.awaitingNext) return;
+    var remaining = state.session.length - state.index;
+    if (remaining <= 1) return;
+    var q = state.session.splice(state.index, 1)[0];
+    state.session.push(q);
+    renderQuestion();
   }
 
   function startSession() {
@@ -251,6 +308,7 @@
       alert('Question module not loaded.');
       return;
     }
+    if (p.setId === 'guest' && mod.setLevel) mod.setLevel(savedLevel(p.id));
     state.session = mod.makeSession(p.sessionSize || 50);
     state.index = 0;
     state.correctCount = 0;
@@ -336,6 +394,16 @@
       } else {
         ColeMathStorage.recordAnswer(q.type, false, q.prompt);
       }
+      state.wrongTries = (state.wrongTries || 0) + 1;
+      if (state.wrongTries >= 3) {
+        state.awaitingNext = true;
+        $('feedback').textContent = 'The answer is ' + answerText(q) + '. Next one!';
+        $('feedback').className = 'feedback bad';
+        ColeMathStorage.resetStreak();
+        updateHud();
+        setTimeout(advance, 2200);
+        return;
+      }
       $('feedback').textContent = '✗  Try again';
       $('feedback').className = 'feedback bad';
       updateHud();
@@ -376,6 +444,15 @@
         submit();
       }
     });
+    if ($('skipBtn')) $('skipBtn').onclick = skip;
+    if ($('remBtn')) {
+      $('remBtn').onclick = function () {
+        var inp = $('answerInput');
+        var v = (inp.value || '').replace(/\s+$/, '');
+        if (!/r/i.test(v)) inp.value = v + ' r ';
+        try { inp.focus(); } catch (e) {}
+      };
+    }
     $('pinSubmit').onclick = submitPin;
     $('pinInput').addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.keyCode === 13) {
@@ -430,6 +507,7 @@
     startSession: startSession,
     submit: submit,
     getState: function () { return state; },
+    skip: skip,
     STREAK_REWARD: STREAK_REWARD,
     showProfilePicker: showProfilePicker,
     beginGuest: beginGuest,
